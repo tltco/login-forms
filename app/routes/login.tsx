@@ -66,7 +66,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg text-sm font-bold text-gray-900 bg-white hover:bg-gray-100 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white transition-all duration-200 active:scale-95"
+            className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg text-sm font-bold text-gray-900 bg-white hover:bg-gray-100 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white transition-all duration-200 active:scale-95 cursor-pointer"
           >
             Acessar
           </button>
