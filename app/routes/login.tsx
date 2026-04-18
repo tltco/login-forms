@@ -25,8 +25,8 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Video Side - 2/3 width */}
-      <div className="hidden lg:block lg:w-2/3 relative overflow-hidden">
+      {/* Video Side - 1/2 width */}
+      <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <video
           src={video}
           autoPlay
@@ -38,8 +38,8 @@ export default function Login() {
         <div className="absolute inset-0 bg-black/20"></div>
       </div>
       
-      {/* Form Side - 1/3 width */}
-      <div className="w-full lg:w-1/3 bg-white flex flex-col justify-center px-8 sm:px-12 xl:px-16 shadow-2xl z-10">
+      {/* Form Side - 1/2 width */}
+      <div className="w-full lg:w-1/2 bg-[#f6f6f6] flex flex-col justify-center px-8 sm:px-12 xl:px-16 shadow-2xl z-10">
         <div className="w-full max-w-sm mx-auto">
           <h1 className="text-3xl font-bold text-center text-gray-900 mb-8 tracking-tight">Login</h1>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -52,7 +52,7 @@ export default function Login() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                className="block w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all shadow-sm"
                 placeholder="Digite seu e-mail"
               />
             </div>
@@ -65,13 +65,13 @@ export default function Login() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                className="block w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all shadow-sm"
                 placeholder="Digite sua senha"
               />
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg shadow-blue-500/30 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all duration-200 active:scale-95 cursor-pointer"
+              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg shadow-black/20 text-sm font-bold text-white bg-black hover:bg-gray-800 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#f6f6f6] focus:ring-black transition-all duration-200 active:scale-95 cursor-pointer"
             >
               Acessar
             </button>
