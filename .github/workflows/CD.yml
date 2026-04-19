@@ -2,9 +2,9 @@ name: CD - Deploy para GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_run:
-    workflows: ["CI - Integração Contínua"]
+    workflows: ["Continuous integration"]
     types: [completed]
     branches: [main]
 
@@ -15,7 +15,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
-    
+
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
 
       - name: Instalar dependências
         run: npm ci
