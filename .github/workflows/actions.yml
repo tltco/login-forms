@@ -2,7 +2,7 @@ name: Pipeline CI/CD
 
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
   pull_request:
     branches: [master]
 
@@ -25,6 +25,9 @@ jobs:
 
       - name: Instalar dependências
         run: npm ci
+
+      - name: Rodar Testes
+        run: npm test
 
       - name: Build do Projeto
         run: npm run build
