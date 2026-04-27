@@ -25,7 +25,6 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Video Side - 1/2 width */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <video
           src={video}
@@ -37,8 +36,6 @@ export default function Login() {
         />
         <div className="absolute inset-0 bg-black/20"></div>
       </div>
-      
-      {/* Form Side - 1/2 width */}
       <div className="w-full lg:w-1/2 bg-[#f6f6f6] flex flex-col justify-center px-8 sm:px-12 xl:px-16 shadow-2xl z-10">
         <div className="w-full max-w-sm mx-auto">
           <h1 className="text-3xl font-bold text-center text-gray-900 mb-8 tracking-tight">Login</h1>
