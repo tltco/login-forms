@@ -1,8 +1,8 @@
-import video from "./video-runway.mp4";
-import type { Route } from "./+types/login";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router";
+import { auth } from "../firebase";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Login" },
     { name: "description", content: "Página de Login" },
@@ -13,48 +13,48 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email === "eduardo.lino@pucpr.br" && password === "123456") {
-      setMessage("Acessado com sucesso!");
-    } else {
-      setMessage("Usuário ou senha incorretos!");
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      navigate("/principal");
+    } catch {
+      setMessage("Usuário não está cadastrado");
     }
   };
 
   return (
-    <div className="flex min-h-screen">
-      <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
-        <video
-          src={video}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/20"></div>
-      </div>
-      <div className="w-full lg:w-1/2 bg-[#f6f6f6] flex flex-col justify-center px-8 sm:px-12 xl:px-16 shadow-2xl z-10">
-        <div className="w-full max-w-sm mx-auto">
-          <h1 className="text-3xl font-bold text-center text-gray-900 mb-8 tracking-tight">Login</h1>
-          <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl p-8">
+          <h1 className="text-3xl font-bold text-center text-white mb-8 tracking-tight">
+            Login
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5 cursor-pointer">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-slate-300 mb-1.5"
+              >
                 E-mail
               </label>
               <input
-                type="text"
+                type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all shadow-sm"
+                className="block w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
                 placeholder="Digite seu e-mail"
+                required
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5 cursor-pointer">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-300 mb-1.5"
+              >
                 Senha
               </label>
               <input
@@ -62,30 +62,34 @@ export default function Login() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all shadow-sm"
+                className="block w-full px-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
                 placeholder="Digite sua senha"
+                required
               />
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg shadow-black/20 text-sm font-bold text-white bg-black hover:bg-gray-800 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#f6f6f6] focus:ring-black transition-all duration-200 active:scale-95 cursor-pointer"
+              className="w-full py-3.5 px-4 mt-2 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all duration-200 hover:scale-[1.02] active:scale-95 shadow-lg shadow-indigo-500/25 cursor-pointer"
             >
               Acessar
             </button>
           </form>
           {message && (
-            <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <label
-                className={`inline-block text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm border ${
-                  message === "Acessado com sucesso!"
-                    ? "bg-green-50 text-green-700 border-green-200"
-                    : "bg-red-50 text-red-700 border-red-200"
-                }`}
-              >
+            <div className="mt-6 flex justify-center">
+              <span className="inline-block text-sm font-semibold px-5 py-2.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
                 {message}
-              </label>
+              </span>
             </div>
           )}
+          <p className="mt-6 text-center text-sm text-slate-400">
+            Não tem conta?{" "}
+            <Link
+              to="/cadastro"
+              className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Cadastre-se
+            </Link>
+          </p>
         </div>
       </div>
     </div>

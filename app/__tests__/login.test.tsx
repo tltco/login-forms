@@ -1,17 +1,34 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from "vitest";
-import Login from "../routes/login";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock do arquivo de vídeo
-vi.mock("../routes/video-runway.mp4", () => ({
-  default: "mocked-video.mp4",
+// Mock react-router
+const mockNavigate = vi.fn();
+vi.mock("react-router", () => ({
+  useNavigate: () => mockNavigate,
+  Link: ({ to, children, ...props }: any) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
-// Mock do módulo de tipos do react-router
-vi.mock("../routes/+types/login", () => ({}));
+// Mock Firebase
+const mockSignIn = vi.fn();
+vi.mock("../firebase", () => ({
+  auth: {
+    signInWithEmailAndPassword: (...args: any[]) => mockSignIn(...args),
+  },
+  db: {},
+}));
+
+import Login from "../routes/login";
 
 describe("Login Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("deve renderizar o formulário com campos de email e senha", () => {
     render(<Login />);
 
@@ -26,18 +43,21 @@ describe("Login Component", () => {
     expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
   });
 
-  it("deve exibir mensagem de sucesso com credenciais corretas", async () => {
+  it("deve navegar para /principal com credenciais corretas", async () => {
+    mockSignIn.mockResolvedValueOnce({});
     const user = userEvent.setup();
     render(<Login />);
 
-    await user.type(screen.getByLabelText("E-mail"), "eduardo.lino@pucpr.br");
+    await user.type(screen.getByLabelText("E-mail"), "test@test.com");
     await user.type(screen.getByLabelText("Senha"), "123456");
     await user.click(screen.getByRole("button", { name: "Acessar" }));
 
-    expect(screen.getByText("Acessado com sucesso!")).toBeInTheDocument();
+    expect(mockSignIn).toHaveBeenCalledWith("test@test.com", "123456");
+    expect(mockNavigate).toHaveBeenCalledWith("/principal");
   });
 
   it("deve exibir mensagem de erro com credenciais incorretas", async () => {
+    mockSignIn.mockRejectedValueOnce(new Error("auth/user-not-found"));
     const user = userEvent.setup();
     render(<Login />);
 
@@ -45,45 +65,24 @@ describe("Login Component", () => {
     await user.type(screen.getByLabelText("Senha"), "wrongpassword");
     await user.click(screen.getByRole("button", { name: "Acessar" }));
 
-    expect(screen.getByText("Usuário ou senha incorretos!")).toBeInTheDocument();
-  });
-
-  it("deve exibir erro quando apenas o email está correto", async () => {
-    const user = userEvent.setup();
-    render(<Login />);
-
-    await user.type(screen.getByLabelText("E-mail"), "eduardo.lino@pucpr.br");
-    await user.type(screen.getByLabelText("Senha"), "senhaerrada");
-    await user.click(screen.getByRole("button", { name: "Acessar" }));
-
-    expect(screen.getByText("Usuário ou senha incorretos!")).toBeInTheDocument();
-  });
-
-  it("deve exibir erro quando apenas a senha está correta", async () => {
-    const user = userEvent.setup();
-    render(<Login />);
-
-    await user.type(screen.getByLabelText("E-mail"), "outro@email.com");
-    await user.type(screen.getByLabelText("Senha"), "123456");
-    await user.click(screen.getByRole("button", { name: "Acessar" }));
-
-    expect(screen.getByText("Usuário ou senha incorretos!")).toBeInTheDocument();
+    expect(
+      screen.getByText("Usuário não está cadastrado")
+    ).toBeInTheDocument();
   });
 
   it("não deve exibir mensagem antes do submit", () => {
     render(<Login />);
 
-    expect(screen.queryByText("Acessado com sucesso!")).not.toBeInTheDocument();
-    expect(screen.queryByText("Usuário ou senha incorretos!")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Usuário não está cadastrado")
+    ).not.toBeInTheDocument();
   });
 
-  it("deve atualizar o valor do campo email ao digitar", async () => {
-    const user = userEvent.setup();
+  it("deve ter link para a página de cadastro", () => {
     render(<Login />);
 
-    const emailInput = screen.getByLabelText("E-mail");
-    await user.type(emailInput, "test@test.com");
-
-    expect(emailInput).toHaveValue("test@test.com");
+    const link = screen.getByRole("link", { name: "Cadastre-se" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/cadastro");
   });
 });
